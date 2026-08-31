@@ -88,10 +88,10 @@ struct Material
 //============================================================================
 Camera camera;
 Light lights[2];
-Material materials[6];
+Material materials[9];
 
-Sphere spheres[2];
-Box boxes[3];
+Sphere spheres[4];
+Box boxes[12];
 Plane planes[1];
 //////////// Random functions ///////////
 float g_seed = 0.;
@@ -361,8 +361,8 @@ mat3 getRotXYZ(float pitch, float yaw, float roll)
 void initScene() 
 {
     float aspectRatio = iResolution.x / iResolution.y;
-    vec3 origin = vec3(0., 2.8, 3);
-    vec3 lookAt = normalize(vec3(0.,0.45,0.) - origin);
+    vec3 origin = vec3(0., 2.4, 3.6);
+    vec3 lookAt = normalize(vec3(0.,0.65,0.) - origin);
     vec3 up = vec3(0, 1, 0);
     vec3 right = normalize(cross(lookAt, up));
     up = normalize(cross(right, lookAt));
@@ -382,45 +382,74 @@ void initScene()
     materials[1].kr = 0.8 * materials[1].ks;
 
     materials[2].ka = vec3(0.0);
-    materials[2].kd = vec3(0.5);
-    materials[2].ks = vec3(0.5);
+    materials[2].kd = vec3(0.92);
+    materials[2].ks = vec3(0.45);
     materials[2].shininess = 128.;
     materials[2].kr = 0.5 * materials[2].ks;
 
     materials[3].ka = vec3(0.0);
-    materials[3].kd = vec3(13, 71, 161) / 255.;
-    materials[3].ks = vec3(0.3);
+    materials[3].kd = vec3(20, 24, 30) / 255.;
+    materials[3].ks = vec3(0.9);
     materials[3].shininess = 128.;
-    materials[3].kr = 0.4 * materials[3].ks;
+    materials[3].kr = 0.65 * materials[3].ks;
 
     materials[4].ka = vec3(0.0);
-    materials[4].kd = vec3(183, 28, 28) / 255.;
-    materials[4].ks = 1.2 * materials[4].kd;
+    materials[4].kd = vec3(168, 172, 174) / 255.;
+    materials[4].ks = vec3(0.75);
     materials[4].shininess = 128.;
-    materials[4].kr = 0.6 * materials[4].ks;
+    materials[4].kr = 0.45 * materials[4].ks;
 
     materials[5].ka = vec3(0.0);
-    materials[5].kd = vec3(27, 94, 32) / 255.;
-    materials[5].ks = 0.2 * materials[5].kd;
+    materials[5].kd = vec3(235, 235, 225) / 255.;
+    materials[5].ks = vec3(0.35);
     materials[5].shininess = 128.;
-    materials[5].kr = 0.5 * materials[5].ks;
+    materials[5].kr = 0.15 * materials[5].ks;
 
-    lights[0] = Light(vec3(-4., 5., 2.5), 
-                            /*Ia*/ vec3(0.1, 0.1, 0.1), 
-                            /*Id*/ vec3(1.0, 1.0, 1.0), 
-                            /*Is*/ vec3(0.8, 0.8, 0.8));
-    lights[1] = Light(vec3(1.5, 4., 3.), 
-                            /*Ia*/ vec3(0.1, 0.1, 0.1), 
-                            /*Id*/ vec3(0.9, 0.9, 0.9), 
-                            /*Is*/ vec3(0.5, 0.5, 0.5));
+    materials[6].ka = vec3(0.02);
+    materials[6].kd = vec3(250, 188, 96) / 255.;
+    materials[6].ks = vec3(0.55);
+    materials[6].shininess = 96.;
+    materials[6].kr = 0.2 * materials[6].ks;
+
+    materials[7].ka = vec3(0.02);
+    materials[7].kd = vec3(59, 133, 77) / 255.;
+    materials[7].ks = vec3(0.18);
+    materials[7].shininess = 64.;
+    materials[7].kr = 0.08 * materials[7].ks;
+
+    materials[8].ka = vec3(0.02);
+    materials[8].kd = vec3(117, 78, 48) / 255.;
+    materials[8].ks = vec3(0.2);
+    materials[8].shininess = 64.;
+    materials[8].kr = 0.12 * materials[8].ks;
+
+    lights[0] = Light(vec3(-1.8, 3.0, 1.1),
+                            /*Ia*/ vec3(0.12, 0.09, 0.06),
+                            /*Id*/ vec3(1.0, 0.78, 0.45),
+                            /*Is*/ vec3(0.95, 0.75, 0.5));
+    lights[1] = Light(vec3(1.8, 3.4, 2.2),
+                            /*Ia*/ vec3(0.04, 0.05, 0.07),
+                            /*Id*/ vec3(0.35, 0.48, 0.75),
+                            /*Is*/ vec3(0.35, 0.45, 0.7));
     planes[0] = Plane(vec3(0., 1., 0.), vec3(0., 0., 0.), 0);
 
-    spheres[0] = Sphere(vec3(0., 1.5, 0.), 0.5, 1);
-    spheres[1] = Sphere(vec3(-0.6, 0.4, 1.1), 0.4, 2);
+    spheres[0] = Sphere(vec3(1.02, 0.64, -0.04), 0.21, 7);
+    spheres[1] = Sphere(vec3(1.24, 0.68, 0.04), 0.18, 7);
+    spheres[2] = Sphere(vec3(1.12, 0.86, -0.02), 0.16, 7);
+    spheres[3] = Sphere(vec3(-1.42, 1.38, 0.68), 0.11, 6);
 
-    boxes[0] = Box(vec3(0., 0.5, 0.), vec3(0.5), getRotXYZ(0., 0., 0.), 3);
-    boxes[1] = Box(vec3(-1.2, 0.85, 0.0), vec3(0.4, 0.85, 0.4), getRotXYZ(0., 0.4 * M_PI, 0.), 4);
-    boxes[2] = Box(vec3(0.8, 0.3, 0.8), vec3(0.75, 0.3, 0.3), getRotXYZ(0., 0.2 * M_PI, 0.), 5);
+    boxes[0] = Box(vec3(0.0, 1.02, -0.85), vec3(1.0, 0.58, 0.04), getRotXYZ(0., 0., 0.), 3);
+    boxes[1] = Box(vec3(0.0, 0.38, -0.78), vec3(0.08, 0.34, 0.05), getRotXYZ(0., 0., 0.), 4);
+    boxes[2] = Box(vec3(0.0, 0.08, -0.52), vec3(0.48, 0.06, 0.22), getRotXYZ(0., 0., 0.), 4);
+    boxes[3] = Box(vec3(0.0, 0.08, 0.62), vec3(0.82, 0.05, 0.24), getRotXYZ(0., -0.04 * M_PI, 0.), 5);
+    boxes[4] = Box(vec3(-0.28, 0.145, 0.48), vec3(0.44, 0.012, 0.018), getRotXYZ(0., -0.04 * M_PI, 0.), 3);
+    boxes[5] = Box(vec3(0.0, 0.145, 0.62), vec3(0.62, 0.012, 0.018), getRotXYZ(0., -0.04 * M_PI, 0.), 3);
+    boxes[6] = Box(vec3(0.22, 0.145, 0.76), vec3(0.46, 0.012, 0.018), getRotXYZ(0., -0.04 * M_PI, 0.), 3);
+    boxes[7] = Box(vec3(0.98, 0.07, 0.68), vec3(0.18, 0.04, 0.25), getRotXYZ(0., -0.08 * M_PI, 0.), 5);
+    boxes[8] = Box(vec3(-1.45, 0.07, 0.55), vec3(0.25, 0.05, 0.25), getRotXYZ(0., 0., 0.), 4);
+    boxes[9] = Box(vec3(-1.45, 0.68, 0.55), vec3(0.04, 0.6, 0.04), getRotXYZ(0., 0., 0.), 4);
+    boxes[10] = Box(vec3(-1.3, 1.28, 0.55), vec3(0.34, 0.14, 0.22), getRotXYZ(0.0, 0.0, 0.08 * M_PI), 6);
+    boxes[11] = Box(vec3(1.12, 0.18, -0.02), vec3(0.28, 0.18, 0.28), getRotXYZ(0., 0.08 * M_PI, 0.), 8);
 }
 
 // TODO Step 5: Change the value of numberOfSampling to 50

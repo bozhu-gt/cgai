@@ -1,0 +1,9 @@
+CS8803 CGAI HW1 Creative Expression Explanation
+
+Theme: Mini Desk Workspace Diorama
+
+For the creative expression result, I redesigned the default ray-traced scene into a small desktop workspace. The scene uses only the existing ray tracing primitives, spheres and boxes, but rearranges and resizes them to represent a monitor, keyboard, mouse, desk lamp, and bonsai plant on a marble desktop.
+
+The monitor is built from thin box primitives with a dark reflective screen and a metallic stand. The keyboard is a low, flat box with three dark narrow key rows on top. The mouse is represented by a small flat box placed to the right of the keyboard. The desk lamp is assembled from a base, pole, shade, and warm glowing sphere near the shade. The bonsai uses a box for the pot and three smaller green spheres grouped together for a more organic plant canopy.
+
+I also changed the material colors and reflection coefficients to make the scene read more like a desktop setup: dark glossy material for the screen and key rows, silver material for the stand, warm material for the lamp shade, white glossy material for the keyboard and mouse, green material for the bonsai, and brown material for the pot. The lighting setup was changed to include a warm lamp-like key light and a cooler fill light, producing visible shadows and reflections across the desktop.

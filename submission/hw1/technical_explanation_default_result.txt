@@ -1,0 +1,20 @@
+CS8803 CGAI HW1 Technical Explanation
+
+This implementation completes the default ray tracing pipeline in fragment.glsl.
+
+Step 1: Ray-object intersection
+For spheres, I implemented the standard ray-sphere intersection by substituting the ray equation p = origin + t * direction into the sphere equation |p - center|^2 = r^2. This produces a quadratic equation. If the discriminant is negative, the ray misses the sphere. Otherwise, the shader chooses the nearest positive intersection distance and returns the hit point, outward normal, distance, and material id.
+
+For boxes, I implemented slab-based ray-box intersection. Because the boxes can be rotated, the ray is first transformed into the box's local coordinate system using the transpose of the rotation matrix. In local space, each box is treated as an axis-aligned box, and the valid intersection interval is computed along the x, y, and z axes. The nearest valid hit is converted back to world space, and the corresponding face normal is rotated back into world space.
+
+Step 2: Phong shading
+The Phong shading function computes the color at a hit point using ambient, diffuse, and specular terms. The ambient term uses the material ambient coefficient and light ambient intensity. The diffuse term uses the dot product between the surface normal and light direction. The specular term uses the reflected light direction, view direction, material specular coefficient, and shininess value. Specular lighting is only added when the surface faces the light.
+
+Step 3: Shadows
+For each hit point, the shader casts a shadow ray from the surface toward the light source. The ray origin is moved slightly along the surface normal to avoid self-intersection artifacts caused by floating-point precision. If the shadow ray hits another object before reaching the light, the point is considered shadowed and receives only ambient lighting from that light.
+
+Step 4: Texture mapping
+The floor material samples the marble texture using UV coordinates derived from the world-space x and z coordinates of the hit point. The sampled texture color is multiplied by the floor material's diffuse color so the floor keeps its base material response while showing the marble image pattern.
+
+Step 5: Reflection and recursive ray tracing
+The reflection loop was enabled by setting numberOfSampling to 50. After each surface hit, the shader accumulates the local shaded color, multiplies the reflection contribution by the material reflection coefficient, and creates a new reflected ray using GLSL's reflect function. The reflected ray origin is offset slightly along the normal to avoid intersecting the same surface again. This produces recursive mirror-like reflections, especially on the black reflective sphere.
