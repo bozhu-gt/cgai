@@ -361,8 +361,8 @@ mat3 getRotXYZ(float pitch, float yaw, float roll)
 void initScene() 
 {
     float aspectRatio = iResolution.x / iResolution.y;
-    vec3 origin = vec3(0., 2.4, 3.6);
-    vec3 lookAt = normalize(vec3(0.,0.65,0.) - origin);
+    vec3 origin = vec3(0., 2.15, 4.8);
+    vec3 lookAt = normalize(vec3(0.,0.32,0.25) - origin);
     vec3 up = vec3(0, 1, 0);
     vec3 right = normalize(cross(lookAt, up));
     up = normalize(cross(right, lookAt));
@@ -371,9 +371,9 @@ void initScene()
     // Floor Material 
     materials[0].ka = vec3(0.05);
     materials[0].kd = vec3(0.5);
-    materials[0].ks = vec3(0.8);
-    materials[0].shininess = 10.0;
-    materials[0].kr = 0.3 * materials[0].ks;
+    materials[0].ks = vec3(0.35);
+    materials[0].shininess = 18.0;
+    materials[0].kr = 0.12 * materials[0].ks;
 
     materials[1].ka = vec3(0.0);
     materials[1].kd = vec3(0.0);
@@ -389,9 +389,9 @@ void initScene()
 
     materials[3].ka = vec3(0.0);
     materials[3].kd = vec3(20, 24, 30) / 255.;
-    materials[3].ks = vec3(0.9);
+    materials[3].ks = vec3(0.65);
     materials[3].shininess = 128.;
-    materials[3].kr = 0.65 * materials[3].ks;
+    materials[3].kr = 0.45 * materials[3].ks;
 
     materials[4].ka = vec3(0.0);
     materials[4].kd = vec3(168, 172, 174) / 255.;
@@ -423,14 +423,14 @@ void initScene()
     materials[8].shininess = 64.;
     materials[8].kr = 0.12 * materials[8].ks;
 
-    lights[0] = Light(vec3(-1.8, 3.0, 1.1),
-                            /*Ia*/ vec3(0.12, 0.09, 0.06),
-                            /*Id*/ vec3(1.0, 0.78, 0.45),
-                            /*Is*/ vec3(0.95, 0.75, 0.5));
-    lights[1] = Light(vec3(1.8, 3.4, 2.2),
-                            /*Ia*/ vec3(0.04, 0.05, 0.07),
-                            /*Id*/ vec3(0.35, 0.48, 0.75),
-                            /*Is*/ vec3(0.35, 0.45, 0.7));
+    lights[0] = Light(vec3(-1.55, 2.65, 1.2),
+                            /*Ia*/ vec3(0.16, 0.13, 0.1),
+                            /*Id*/ vec3(0.78, 0.62, 0.4),
+                            /*Is*/ vec3(0.55, 0.45, 0.32));
+    lights[1] = Light(vec3(1.7, 3.2, 1.5),
+                            /*Ia*/ vec3(0.08, 0.09, 0.1),
+                            /*Id*/ vec3(0.28, 0.32, 0.38),
+                            /*Is*/ vec3(0.25, 0.28, 0.34));
     planes[0] = Plane(vec3(0., 1., 0.), vec3(0., 0., 0.), 0);
 
     spheres[0] = Sphere(vec3(1.02, 0.64, -0.04), 0.21, 7);
@@ -441,15 +441,15 @@ void initScene()
     boxes[0] = Box(vec3(0.0, 1.02, -0.85), vec3(1.0, 0.58, 0.04), getRotXYZ(0., 0., 0.), 3);
     boxes[1] = Box(vec3(0.0, 0.38, -0.78), vec3(0.08, 0.34, 0.05), getRotXYZ(0., 0., 0.), 4);
     boxes[2] = Box(vec3(0.0, 0.08, -0.52), vec3(0.48, 0.06, 0.22), getRotXYZ(0., 0., 0.), 4);
-    boxes[3] = Box(vec3(0.0, 0.08, 0.62), vec3(0.82, 0.05, 0.24), getRotXYZ(0., -0.04 * M_PI, 0.), 5);
-    boxes[4] = Box(vec3(-0.28, 0.145, 0.48), vec3(0.44, 0.012, 0.018), getRotXYZ(0., -0.04 * M_PI, 0.), 3);
-    boxes[5] = Box(vec3(0.0, 0.145, 0.62), vec3(0.62, 0.012, 0.018), getRotXYZ(0., -0.04 * M_PI, 0.), 3);
-    boxes[6] = Box(vec3(0.22, 0.145, 0.76), vec3(0.46, 0.012, 0.018), getRotXYZ(0., -0.04 * M_PI, 0.), 3);
-    boxes[7] = Box(vec3(0.98, 0.07, 0.68), vec3(0.18, 0.04, 0.25), getRotXYZ(0., -0.08 * M_PI, 0.), 5);
+    boxes[3] = Box(vec3(0.0, 0.08, 0.62), vec3(0.82, 0.05, 0.24), getRotXYZ(0., 0., 0.), 5);
+    boxes[4] = Box(vec3(-0.28, 0.145, 0.48), vec3(0.44, 0.012, 0.018), getRotXYZ(0., 0., 0.), 3);
+    boxes[5] = Box(vec3(0.0, 0.145, 0.62), vec3(0.62, 0.012, 0.018), getRotXYZ(0., 0., 0.), 3);
+    boxes[6] = Box(vec3(0.22, 0.145, 0.76), vec3(0.46, 0.012, 0.018), getRotXYZ(0., 0., 0.), 3);
+    boxes[7] = Box(vec3(0.98, 0.07, 0.68), vec3(0.18, 0.04, 0.25), getRotXYZ(0., 0., 0.), 5);
     boxes[8] = Box(vec3(-1.45, 0.07, 0.55), vec3(0.25, 0.05, 0.25), getRotXYZ(0., 0., 0.), 4);
     boxes[9] = Box(vec3(-1.45, 0.68, 0.55), vec3(0.04, 0.6, 0.04), getRotXYZ(0., 0., 0.), 4);
-    boxes[10] = Box(vec3(-1.3, 1.28, 0.55), vec3(0.34, 0.14, 0.22), getRotXYZ(0.0, 0.0, 0.08 * M_PI), 6);
-    boxes[11] = Box(vec3(1.12, 0.18, -0.02), vec3(0.28, 0.18, 0.28), getRotXYZ(0., 0.08 * M_PI, 0.), 8);
+    boxes[10] = Box(vec3(-1.3, 1.28, 0.55), vec3(0.34, 0.14, 0.22), getRotXYZ(0., 0., 0.), 6);
+    boxes[11] = Box(vec3(1.12, 0.18, -0.02), vec3(0.28, 0.18, 0.28), getRotXYZ(0., 0., 0.), 8);
 }
 
 // TODO Step 5: Change the value of numberOfSampling to 50
