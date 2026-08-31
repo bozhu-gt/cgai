@@ -1,6 +1,6 @@
-CS8803 CGAI HW1 Technical Explanation
+CS8803 CGAI HW1 Technical Implementation Explanation
 
-This implementation completes the default ray tracing pipeline in fragment.glsl.
+This implementation completes the default ray tracing pipeline in fragment.glsl and adds a customized creative expression scene.
 
 Step 1: Ray-object intersection
 For spheres, I implemented the standard ray-sphere intersection by substituting the ray equation p = origin + t * direction into the sphere equation |p - center|^2 = r^2. This produces a quadratic equation. If the discriminant is negative, the ray misses the sphere. Otherwise, the shader chooses the nearest positive intersection distance and returns the hit point, outward normal, distance, and material id.
@@ -17,4 +17,11 @@ Step 4: Texture mapping
 The floor material samples the marble texture using UV coordinates derived from the world-space x and z coordinates of the hit point. The sampled texture color is multiplied by the floor material's diffuse color so the floor keeps its base material response while showing the marble image pattern.
 
 Step 5: Reflection and recursive ray tracing
-The reflection loop was enabled by setting numberOfSampling to 50. After each surface hit, the shader accumulates the local shaded color, multiplies the reflection contribution by the material reflection coefficient, and creates a new reflected ray using GLSL's reflect function. The reflected ray origin is offset slightly along the normal to avoid intersecting the same surface again. This produces recursive mirror-like reflections, especially on the black reflective sphere.
+The reflection loop was enabled by setting numberOfSampling to 50. After each surface hit, the shader accumulates the local shaded color, multiplies the reflection contribution by the material reflection coefficient, and creates a new reflected ray using GLSL's reflect function. The reflected ray origin is offset slightly along the normal to avoid intersecting the same surface again. This produces recursive mirror-like reflections, especially on reflective materials.
+
+Creative Expression: Mini Desk Workspace Diorama
+For the creative expression result, I redesigned the default ray-traced scene into a small desktop workspace. The scene uses only spheres and boxes, but rearranges and resizes them to represent a monitor, keyboard, mouse, desk lamp, and bonsai plant on a marble desktop.
+
+The monitor is built from thin box primitives with a dark reflective screen and a metallic stand. The keyboard is a low, flat box with three dark narrow key rows on top. The mouse is represented by a small flat box placed to the right of the keyboard. The desk lamp is assembled from a base, pole, shade, and warm glowing sphere near the shade. The bonsai uses a box for the pot and three smaller green spheres grouped together for a more organic plant canopy.
+
+I also changed material colors, reflection coefficients, camera framing, and lighting. The creative scene uses a dark glossy screen, silver stand, warm lamp shade, white keyboard and mouse, green bonsai canopy, and brown plant pot. The lighting uses a warm lamp-like key light plus a weaker cool fill light, keeping visible shadows and reflections while avoiding overly harsh color casts on the desktop.
