@@ -152,7 +152,26 @@ Hit hitSphere(const Ray r, const Sphere s)
     Hit hit = noHit;
 	
     /* your implementation starts */
-    
+    vec3 oc = r.ori - s.ori;
+    float a = dot(r.dir, r.dir);
+    float b = 2.0 * dot(oc, r.dir);
+    float c = dot(oc, oc) - s.r * s.r;
+    float discriminant = b * b - 4.0 * a * c;
+
+    if(discriminant < 0.0)
+        return noHit;
+
+    float sqrtD = sqrt(discriminant);
+    float t0 = (-b - sqrtD) / (2.0 * a);
+    float t1 = (-b + sqrtD) / (2.0 * a);
+    float t = t0 > Epsilon ? t0 : t1;
+
+    if(t <= Epsilon)
+        return noHit;
+
+    vec3 hitP = r.ori + t * r.dir;
+    vec3 normal = normalize(hitP - s.ori);
+    hit = Hit(t, hitP, normal, s.matId);
 	/* your implementation ends */
     
 	return hit;
@@ -164,6 +183,42 @@ Hit hitBox(const Ray r, const Box b)
     Hit hit = noHit;
 	
     /* your implementation starts */
+    mat3 invRot = transpose(b.rot);
+    vec3 localOri = invRot * (r.ori - b.ori);
+    vec3 localDir = invRot * r.dir;
+    vec3 safeDir = localDir;
+    if(abs(safeDir.x) < Epsilon) safeDir.x = safeDir.x < 0.0 ? -Epsilon : Epsilon;
+    if(abs(safeDir.y) < Epsilon) safeDir.y = safeDir.y < 0.0 ? -Epsilon : Epsilon;
+    if(abs(safeDir.z) < Epsilon) safeDir.z = safeDir.z < 0.0 ? -Epsilon : Epsilon;
+
+    vec3 invDir = 1.0 / safeDir;
+    vec3 tMin = (-b.halfWidth - localOri) * invDir;
+    vec3 tMax = ( b.halfWidth - localOri) * invDir;
+    vec3 t1 = min(tMin, tMax);
+    vec3 t2 = max(tMin, tMax);
+
+    float tNear = max(max(t1.x, t1.y), t1.z);
+    float tFar = min(min(t2.x, t2.y), t2.z);
+
+    if(tNear > tFar || tFar <= Epsilon)
+        return noHit;
+
+    float t = tNear > Epsilon ? tNear : tFar;
+    vec3 localHitP = localOri + t * localDir;
+    vec3 localNormal = vec3(0.0);
+    float bias = 1e-4;
+
+    if(abs(abs(localHitP.x) - b.halfWidth.x) < bias) {
+        localNormal = vec3(sign(localHitP.x), 0.0, 0.0);
+    } else if(abs(abs(localHitP.y) - b.halfWidth.y) < bias) {
+        localNormal = vec3(0.0, sign(localHitP.y), 0.0);
+    } else {
+        localNormal = vec3(0.0, 0.0, sign(localHitP.z));
+    }
+
+    vec3 hitP = r.ori + t * r.dir;
+    vec3 normal = normalize(b.rot * localNormal);
+    hit = Hit(t, hitP, normal, b.matId);
 
 	/* your implementation ends */
     
@@ -202,7 +257,17 @@ vec3 shading_phong(Light light, int matId, vec3 e, vec3 p, vec3 s, vec3 n)
     vec3 color = matId == 0 ? vec3(0.2, 0, 0) : vec3(0, 0, 0.3);
 	
     /* your implementation starts */
-    
+    Material mat = materials[matId];
+    vec3 l = normalize(s - p);
+    vec3 v = normalize(e - p);
+    vec3 r = reflect(-l, normalize(n));
+    float ndotl = max(dot(normalize(n), l), 0.0);
+
+    vec3 ambient = mat.ka * light.Ia;
+    vec3 diffuse = sampleDiffuse(matId, p) * light.Id * ndotl;
+    vec3 specular = ndotl > 0.0 ? mat.ks * light.Is * pow(max(dot(v, r), 0.0), mat.shininess) : vec3(0.0);
+
+    color = ambient + diffuse + specular;
 	/* your implementation ends */
     
 	return color;
@@ -214,7 +279,12 @@ bool isShadowed(Light light, Hit h)
     bool shadowed = false;
 	
     /* your implementation starts */
-    
+    vec3 toLight = light.position - h.p;
+    float lightDist = length(toLight);
+    Ray shadowRay = Ray(h.p + h.normal * Epsilon * 10.0, normalize(toLight));
+    Hit blocker = findHit(shadowRay);
+
+    shadowed = blocker.t > Epsilon && blocker.t < lightDist - Epsilon;
 	/* your implementation ends */
     
 	return shadowed;
@@ -227,7 +297,8 @@ vec3 sampleDiffuse(int matId, vec3 p)
         vec3 color = materials[matId].kd;
 		
         /* your implementation starts */
-        
+        vec2 uv = fract(p.xz * 0.5);
+        color *= texture(floorTex, uv).rgb;
 		/* your implementation ends */
         
 		return color;
@@ -356,7 +427,7 @@ void initScene()
 
 /* your implementation starts */
 
-const int numberOfSampling = 1;
+const int numberOfSampling = 50;
 
 /* your implementation ends */
 
@@ -384,7 +455,8 @@ void main()
         // TODO Step 5: Define the reflected ray and assign this ray to recursive_ray
         
 		/* your implementation starts */
-        
+        vec3 reflectedDir = normalize(reflect(recursive_ray.dir, hit.normal));
+        recursive_ray = Ray(hit.p + hit.normal * Epsilon * 10.0, reflectedDir);
 		/* your implementation ends */
     }
 
