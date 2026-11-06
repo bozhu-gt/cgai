@@ -528,7 +528,8 @@ void main() {
             const int n_steps = 5;
             float dt = actual_dt / float(n_steps);
 
-            for (int i = 0; i < n_steps; i++) {
+            // Browser timer rounding can produce dt == 0; skip physics to avoid division by zero.
+            for (int i = 0; i < n_steps && dt > 0.0; i++) {
                 // Update rope particles only; skip updating the mouse particle since it's fixed.
                 for (int j = 0; j < n_particles; j++) {
                     if (!particles[j].is_fixed)
